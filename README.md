@@ -5,6 +5,7 @@
 ## Что делает интеграция
 
 - Подписывается на состояние: workstation/media/state
+- Подписывается на возможности: workstation/media/capabilities
 - Подписывается на доступность: workstation/media/availability
 - Публикует команды: workstation/media/cmd
 - Маппит поля из payload:
@@ -12,7 +13,12 @@
   - title -> media_title
   - artist -> media_artist
   - album -> media_album_name
+  - art_url -> media_image_url
   - volume -> volume_level
+  - position_seconds -> media_position
+  - duration_seconds -> media_duration
+  - loop_status -> repeat
+  - shuffle -> shuffle
 
 Поддерживаемые команды:
 
@@ -22,6 +28,11 @@
 - previous
 - stop
 - volume_set
+- position_set (seek)
+- shuffle_on / shuffle_off
+- loop_none / loop_track / loop_playlist
+
+Доступность отдельных функций в UI (громкость, seek, shuffle, repeat и т.д.) определяется по флагам can_* из topic workstation/media/capabilities.
 
 ## Установка
 
@@ -37,6 +48,7 @@ media_player:
     name: Workstation Media
     state_topic: workstation/media/state
     command_topic: workstation/media/cmd
+    capabilities_topic: workstation/media/capabilities
     availability_topic: workstation/media/availability
     qos: 0
     retain: false
