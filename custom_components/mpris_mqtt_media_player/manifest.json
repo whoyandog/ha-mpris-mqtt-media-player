@@ -1,0 +1,17 @@
+{
+  "domain": "mpris_mqtt_media_player",
+  "name": "MPRIS MQTT Media Player",
+  "version": "0.1.0",
+  "documentation": "https://local/ha-mpris-mqtt-media-player",
+  "iot_class": "local_push",
+  "codeowners": [
+    "@local"
+  ],
+  "dependencies": [
+    "mqtt"
+  ],
+  "requirements": [],
+  "loggers": [
+    "custom_components.mpris_mqtt_media_player"
+  ]
+}
