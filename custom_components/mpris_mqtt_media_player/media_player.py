@@ -188,15 +188,21 @@ class MprisMqttMediaPlayer(MediaPlayerEntity):
 
     async def async_media_play(self) -> None:
         """Send play command."""
-        await self._publish_action("play")
+        await self._publish_action("play_pause")
+        self._attr_state = MediaPlayerState.PLAYING
+        self.async_write_ha_state()
 
     async def async_media_pause(self) -> None:
         """Send pause command."""
-        await self._publish_action("pause")
+        await self._publish_action("play_pause")
+        self._attr_state = MediaPlayerState.PAUSED
+        self.async_write_ha_state()
 
     async def async_media_stop(self) -> None:
         """Send stop command."""
         await self._publish_action("stop")
+        self._attr_state = MediaPlayerState.IDLE
+        self.async_write_ha_state()
 
     async def async_media_next_track(self) -> None:
         """Send next-track command."""
@@ -209,14 +215,21 @@ class MprisMqttMediaPlayer(MediaPlayerEntity):
     async def async_set_volume_level(self, volume: float) -> None:
         """Set volume level via volume_set action."""
         await self._publish_action("volume_set", value=volume)
+        self._attr_volume_level = _parse_volume(volume)
+        self.async_write_ha_state()
 
     async def async_media_seek(self, position: float) -> None:
         """Seek to absolute position in seconds."""
         await self._publish_action("position_set", value=position)
+        self._attr_media_position = _parse_positive_float(position)
+        self._attr_media_position_updated_at = dt_util.utcnow()
+        self.async_write_ha_state()
 
     async def async_set_shuffle(self, shuffle: bool) -> None:
         """Enable or disable shuffle mode."""
         await self._publish_action("shuffle_on" if shuffle else "shuffle_off")
+        self._attr_shuffle = shuffle
+        self.async_write_ha_state()
 
     async def async_set_repeat(self, repeat: RepeatMode) -> None:
         """Set repeat mode."""
@@ -228,6 +241,8 @@ class MprisMqttMediaPlayer(MediaPlayerEntity):
         action = action_map.get(repeat)
         if action is not None:
             await self._publish_action(action)
+            self._attr_repeat = repeat
+            self.async_write_ha_state()
 
     async def _publish_action(self, action: str, value: float | None = None) -> None:
         payload: dict[str, Any] = {"action": action}

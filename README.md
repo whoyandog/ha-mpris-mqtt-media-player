@@ -22,6 +22,7 @@
 
 Поддерживаемые команды:
 
+- play_pause (основное действие для UI play/pause)
 - play
 - pause
 - next
@@ -33,6 +34,8 @@
 - loop_none / loop_track / loop_playlist
 
 Доступность отдельных функций в UI (громкость, seek, shuffle, repeat и т.д.) определяется по флагам can_* из topic workstation/media/capabilities.
+
+Интеграция использует optimistic update: после отправки команды UI обновляется сразу, а затем синхронизируется по фактическому payload из topic состояния.
 
 ## Установка
 
